@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur d'E-mail Interactif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        #email-preview-body {
+            min-height: 250px;
+        }
+        .copy-input {
+            width: calc(100% - 70px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Générateur d'E-mail Interactif</h1>
+            <p class="mt-2 text-lg text-gray-600">Complétez le formulaire pour générer un e-mail personnalisé avec un aperçu en direct.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- Section 1: Formulaire de contact -->
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-xl font-bold mb-5 border-b pb-3">1. Informations du Contact</h2>
+                <form id="contact-form" class="space-y-4">
+                    <!-- Champ pour le Type de Contact -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Type de contact</label>
+                        <div class="mt-2 flex items-center space-x-6">
+                            <div class="flex items-center">
+                                <input id="type-prospection" name="contact-type" type="radio" value="prospection" checked class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                <label for="type-prospection" class="ml-2 block text-sm text-gray-900">Nouveau Contact (Prospection)</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="type-suivi" name="contact-type" type="radio" value="suivi" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                <label for="type-suivi" class="ml-2 block text-sm text-gray-900">Contact Connu (Suivi)</label>
+                            </div>
+                        </div>
+                    </div>
+                     <hr/>
+                    <div>
+                        <label for="civilite" class="block text-sm font-medium text-gray-700">Civilité</label>
+                        <input type="text" id="civilite" name="civilite" placeholder="Monsieur, Mme, M..." class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="prenom" class="block text-sm font-medium text-gray-700">Prénom</label>
+                        <input type="text" id="prenom" name="prenom" placeholder="Jean" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="nom" class="block text-sm font-medium text-gray-700">Nom</label>
+                        <input type="text" id="nom" name="nom" placeholder="Dupont" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                     <div>
+                        <label for="societe" class="block text-sm font-medium text-gray-700">Société (optionnel)</label>
+                        <input type="text" id="societe" name="societe" placeholder="BTP Inc." class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email du destinataire</label>
+                        <input type="email" id="email" name="email" placeholder="jean.dupont@example.com" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="cc" class="block text-sm font-medium text-gray-700">CC (optionnel)</label>
+                        <input type="email" id="cc" name="cc" placeholder="collegue@example.com" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                </form>
+            </div>
+
+            <!-- Section 2: Aperçu en direct -->
+            <div class="bg-white p-6 rounded-xl shadow-md flex flex-col">
+                <h2 class="text-xl font-bold mb-5 border-b pb-3">2. Aperçu en Direct</h2>
+                <div class="space-y-3 flex-grow">
+                    <p class="text-sm text-gray-500">De : <span class="font-medium text-gray-800">Lyes AMARA</span></p>
+                    <p class="text-sm text-gray-500">À : <span id="preview-to" class="font-medium text-gray-800 text-blue-600"></span></p>
+                    <p class="text-sm text-gray-500">Cc : <span id="preview-cc" class="font-medium text-gray-800 text-blue-600"></span></p>
+                    <p class="text-sm text-gray-500">Sujet : <span id="preview-subject" class="font-medium text-gray-800"></span></p>
+                    <div id="email-preview-body" class="mt-4 p-4 border rounded-md bg-gray-50 text-sm prose max-w-none">
+                        <!-- Le contenu de l'email apparaîtra ici -->
+                    </div>
+                </div>
+                 <div class="mt-6 flex justify-end">
+                    <button id="generate-email-btn" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">
+                        Générer l'E-mail
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal pour la confirmation et le copier/coller -->
+    <div id="generation-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-10 mx-auto p-6 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Prêt à envoyer</h3>
+                <button id="modal-close" class="text-gray-400 hover:text-gray-600">
+                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <p class="text-sm text-gray-600 mb-5">
+                Le lien 'mailto:' peut ne pas fonctionner selon votre navigateur. La méthode la plus fiable est de **copier/coller** les informations ci-dessous dans un nouvel e-mail (Outlook, Gmail...).
+            </p>
+            <div class="space-y-3">
+                <div class="flex items-center">
+                    <input id="modal-final-to" readonly class="flex-grow bg-gray-100 border rounded-l px-3 py-2 text-sm">
+                    <button class="copy-btn bg-gray-200 hover:bg-gray-300 p-2 rounded-r" data-target="modal-final-to">Copier</button>
+                </div>
+                 <div class="flex items-center">
+                    <input id="modal-final-cc" readonly class="flex-grow bg-gray-100 border rounded-l px-3 py-2 text-sm">
+                    <button class="copy-btn bg-gray-200 hover:bg-gray-300 p-2 rounded-r" data-target="modal-final-cc">Copier</button>
+                </div>
+                <div class="flex items-center">
+                    <input id="modal-final-subject" readonly class="flex-grow bg-gray-100 border rounded-l px-3 py-2 text-sm">
+                    <button class="copy-btn bg-gray-200 hover:bg-gray-300 p-2 rounded-r" data-target="modal-final-subject">Copier</button>
+                </div>
+                <div>
+                    <textarea id="modal-final-body" readonly class="w-full h-32 bg-gray-100 border rounded p-3 text-sm font-mono"></textarea>
+                    <button class="copy-btn w-full mt-1 bg-gray-200 hover:bg-gray-300 p-2 rounded text-sm font-semibold" data-target="modal-final-body">Copier le corps du message</button>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button id="modal-proceed-mailto" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition">
+                    Tenter d'ouvrir le client mail
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // === CONSTANTES & VARIABLES ===
+            const SENDER_NAME = "Lyes AMARA";
+
+            // === ELEMENTS DU DOM ===
+            const form = document.getElementById('contact-form');
+            const allInputs = form.querySelectorAll('input');
+            const generateBtn = document.getElementById('generate-email-btn');
+            const previewTo = document.getElementById('preview-to');
+            const previewCc = document.getElementById('preview-cc');
+            const previewSubject = document.getElementById('preview-subject');
+            const previewBody = document.getElementById('email-preview-body');
+            const modal = document.getElementById('generation-modal');
+            const closeModalBtn = document.getElementById('modal-close');
+            const modalProceedBtn = document.getElementById('modal-proceed-mailto');
+            const modalTo = document.getElementById('modal-final-to');
+            const modalCc = document.getElementById('modal-final-cc');
+            const modalSubject = document.getElementById('modal-final-subject');
+            const modalBody = document.getElementById('modal-final-body');
+
+            // === GESTION DES EVENEMENTS ===
+            allInputs.forEach(input => input.addEventListener('input', updatePreview));
+            generateBtn.addEventListener('click', handleGenerateEmail);
+            closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
+            document.querySelectorAll('.copy-btn').forEach(btn => btn.addEventListener('click', handleCopy));
+
+            // === LOGIQUE DE L'APPLICATION ===
+
+            function updatePreview() {
+                const contact = getContactData();
+                const contactType = document.querySelector('input[name="contact-type"]:checked').value;
+                const isFollowup = contactType === 'suivi';
+                
+                const subject = isFollowup ? "Suivi de nos échanges – Recrutement BTP" : "Proposition d’accompagnement – Recrutement BTP";
+                const bodyHtml = isFollowup ? buildBodyFollowup(contact.civilite, contact.prenom, contact.nom) : buildBodyProspection(contact.civilite, contact.prenom, contact.nom);
+
+                previewTo.textContent = contact.email || '...';
+                previewCc.textContent = contact.cc || '...';
+                previewSubject.textContent = subject;
+                previewBody.innerHTML = bodyHtml;
+            }
+
+            function handleGenerateEmail() {
+                 const contact = getContactData();
+                
+                if (!contact.email) {
+                    alert("Veuillez renseigner l'adresse e-mail du destinataire.");
+                    document.getElementById('email').focus();
+                    return;
+                }
+                
+                const contactType = document.querySelector('input[name="contact-type"]:checked').value;
+                const isFollowup = contactType === 'suivi';
+                
+                const subject = isFollowup ? "Suivi de nos échanges – Recrutement BTP" : "Proposition d’accompagnement – Recrutement BTP";
+                const bodyHtml = isFollowup ? buildBodyFollowup(contact.civilite, contact.prenom, contact.nom) : buildBodyProspection(contact.civilite, contact.prenom, contact.nom);
+                const bodyText = convertHtmlToText(bodyHtml);
+                
+                modalTo.value = contact.email;
+                modalCc.value = contact.cc;
+                modalSubject.value = subject;
+                modalBody.value = bodyText.trim();
+                
+                modalProceedBtn.onclick = () => {
+                     generateMailto(contact.email, contact.cc, subject, bodyHtml);
+                };
+                
+                modal.classList.remove('hidden');
+            }
+
+            function handleCopy(event) {
+                const targetId = event.target.dataset.target;
+                const elementToCopy = document.getElementById(targetId);
+                elementToCopy.select();
+                document.execCommand('copy');
+                const originalText = event.target.textContent;
+                event.target.textContent = 'Copié !';
+                setTimeout(() => { event.target.textContent = originalText; }, 1500);
+            }
+
+            function getContactData() {
+                 return {
+                    civilite: document.getElementById('civilite').value,
+                    prenom: document.getElementById('prenom').value,
+                    nom: document.getElementById('nom').value,
+                    email: document.getElementById('email').value,
+                    cc: document.getElementById('cc').value,
+                };
+            }
+            
+            // === LOGIQUE DE GENERATION D'EMAIL (Traduction du VBA) ===
+
+            // Corresponds to VBA Function: BuildBodyProspection
+            function buildBodyProspection(civilite, prenom, nom) {
+                const salutation = makeSmartSalutation(civilite, prenom, nom);
+                return `
+                    <p>${salutation}</p>
+                    <p>J’espère que vous allez bien.</p>
+                    <p>Je me présente, <strong>${SENDER_NAME}</strong>, spécialiste du recrutement de profils rares et pénuriques dans le BTP depuis 2017. Je souhaite vous proposer mon accompagnement pour vos recherches les plus urgentes et complexes.</p>
+                    <p>À ce titre, je voulais savoir si vous aviez actuellement des recrutements ouverts sur lesquels nous pourrions vous apporter notre expertise.</p>
+                    <p>N’hésitez pas à me faire part de vos besoins afin que je puisse vous proposer des profils qualifiés et ciblés dans les meilleurs délais.</p>
+                    <p>Dans l’attente de votre retour, je reste à votre disposition pour en discuter.</p>
+                    <p>Bien cordialement,<br>${SENDER_NAME}</p>`;
+            }
+
+            // Corresponds to VBA Function: BuildBodyFollowup
+            function buildBodyFollowup(civilite, prenom, nom) {
+                let salutation;
+                // 'Variante imposée : salutation "Bonjour Prénom,"'
+                if (prenom.trim().length > 0) {
+                    salutation = `Bonjour ${htmlEncode(prenom.trim())},`;
+                } else {
+                    salutation = makeSmartSalutation(civilite, prenom, nom);
+                }
+                return `
+                    <p>${salutation}</p>
+                    <p>J’espère que vous allez bien depuis notre dernier échange.</p>
+                    <p>Dans le cadre de notre collaboration, je me permets de revenir vers vous pour savoir si de nouveaux besoins en recrutement ont émergé de votre côté.</p>
+                    <p>Nous restons plus que jamais mobilisés pour vous accompagner dans la recherche de profils BTP, notamment sur les postes où les candidats se font rares.</p>
+                    <p>Avez-vous des projets de recrutement, urgents ou à venir, sur lesquels nous pourrions vous apporter notre expertise&nbsp;?</p>
+                    <p>Je reste à votre entière disposition pour en discuter.</p>
+                    <p>Bien cordialement,<br>${SENDER_NAME}</p>`;
+            }
+
+            // Corresponds to VBA Function: MakeSmartSalutation
+            function makeSmartSalutation(civilite, prenom, nom) {
+                const p = prenom.trim();
+                const n = nom.trim();
+                const civ = civilite.toLowerCase().trim();
+                let civNorm = '';
+
+                if (["monsieur", "mr", "m.", "m"].includes(civ)) {
+                    civNorm = "Monsieur";
+                } else if (["madame", "mme"].includes(civ)) {
+                    civNorm = "Madame";
+                }
+
+                if (civNorm) { // Civilité reconnue
+                    if (n && p) {
+                        return `Bonjour ${civNorm} ${htmlEncode(n)} ${htmlEncode(p)},`;
+                    } else if (n) {
+                        return `Bonjour ${civNorm} ${htmlEncode(n)},`;
+                    } else if (p) {
+                        return `Bonjour ${civNorm} ${htmlEncode(p)},`;
+                    } else {
+                        return `Bonjour ${civNorm},`;
+                    }
+                } else { // Civilité non reconnue ou vide
+                    if (p) {
+                        return `Bonjour ${htmlEncode(p)},`;
+                    } else if (n) {
+                        return `Bonjour ${htmlEncode(n)},`;
+                    } else {
+                        return "Bonjour,";
+                    }
+                }
+            }
+            
+            // --- Fonctions utilitaires ---
+            function convertHtmlToText(html) {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
+                return tempDiv.textContent || tempDiv.innerText || "";
+            }
+
+            function generateMailto(to, cc, subject, bodyHtml) {
+                const bodyText = convertHtmlToText(bodyHtml);
+                let mailtoLink = `mailto:${encodeURIComponent(to)}`;
+                mailtoLink += `?subject=${encodeURIComponent(subject)}`;
+                if (cc) {
+                   mailtoLink += `&cc=${encodeURIComponent(cc)}`;
+                }
+                mailtoLink += `&body=${encodeURIComponent(bodyText.trim())}`;
+                window.location.href = mailtoLink;
+            }
+
+            function htmlEncode(s) {
+                const el = document.createElement("div");
+                el.innerText = el.textContent = s;
+                return el.innerHTML;
+            }
+            
+            updatePreview(); // Appel initial pour afficher un aperçu vide au chargement
+        });
+    </script>
+</body>
+</html>
+
