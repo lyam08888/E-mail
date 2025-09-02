@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Offres Ingénierie Bâtiment (VRD / Hydraulique / CVC)</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Offres Ingénierie Bâtiment</h1>
+    <p class="muted">VRD • Hydraulique • CVC — France</p>
+  </header>
+
+  <section class="toolbar">
+    <form id="searchForm">
+      <input type="text" id="q" placeholder="Recherche (ex: VRD, hydraulique, CVC, BIM)" />
+      <input type="text" id="location" placeholder="Localisation (ex: Paris, Lyon)" />
+      <select id="seniority">
+        <option value="">Seniority</option>
+        <option>Junior</option>
+        <option>Confirmé</option>
+        <option>Senior</option>
+      </select>
+      <button type="submit">Rechercher</button>
+      <button id="refresh" type="button">Mettre à jour</button>
+    </form>
+  </section>
+
+  <main>
+    <div id="status" class="status">Chargement…</div>
+    <ul id="jobs" class="jobs"></ul>
+  </main>
+
+  <footer>
+    <small>Propulsé par IA (filtrage). Les sources peuvent inclure des APIs publiques et des exemples.</small>
+  </footer>
+
+  <script src="/main.js" defer></script>
+</body>
+</html>

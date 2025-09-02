@@ -1,0 +1,20 @@
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#0f172a;background:#f8fafc}
+header{padding:24px 16px;background:#0ea5e9;color:white}
+header h1{margin:0;font-size:22px}
+header .muted{opacity:.9;margin:4px 0 0}
+.toolbar{background:white;border-bottom:1px solid #e2e8f0;padding:12px}
+#searchForm{display:flex;gap:8px;flex-wrap:wrap}
+#searchForm input,#searchForm select{padding:10px;border:1px solid #cbd5e1;border-radius:8px;min-width:200px}
+#searchForm button{padding:10px 14px;border:0;border-radius:8px;background:#0ea5e9;color:white;cursor:pointer}
+#searchForm button#refresh{background:#16a34a}
+main{max-width:1100px;margin:16px auto;padding:0 16px}
+.status{padding:12px;color:#334155}
+.jobs{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.job{background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.job h3{margin:0 0 4px;font-size:18px;color:#0f172a}
+.job .meta{font-size:13px;color:#475569}
+.job .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{font-size:12px;background:#e2e8f0;color:#334155;border-radius:999px;padding:4px 8px}
+.job .desc{color:#334155;font-size:14px}
+.job a{margin-top:auto;align-self:flex-start;background:#0ea5e9;color:white;text-decoration:none;padding:8px 10px;border-radius:8px}
+footer{padding:16px;color:#475569;text-align:center}
