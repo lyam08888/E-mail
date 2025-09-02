@@ -30,9 +30,13 @@ npm run start
 
 ## Configuration (.env)
 - PORT: port HTTP (défaut 3000)
-- OPENAI_API_KEY: clé OpenAI pour le filtrage IA (sinon, filtrage par mots‑clés)
-- OPENAI_MODEL: modèle (ex: gpt-4o-mini)
+- OPENAI_API_KEY: clé OpenAI pour le filtrage IA (optionnel)
+- OPENAI_MODEL: modèle OpenAI (ex: gpt-4o-mini)
+- GEMINI_API_KEY: clé Google Gemini pour le filtrage IA (optionnel, souvent gratuit)
+- GEMINI_MODEL: modèle Gemini (ex: gemini-1.5-flash)
 - ADZUNA_APP_ID / ADZUNA_APP_KEY: activer la source Adzuna
+
+**Note**: Le système essaie Gemini en premier, puis OpenAI, puis filtrage par mots‑clés si aucune IA n'est configurée.
 
 ## Remarques
 - Le stockage est en mémoire (volatil). À remplacer par DB pour la prod.
